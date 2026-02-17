@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecosistema Claude — Cuadro Comparativo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0f0f12;
+    color: #e0e0e6;
+    padding: 32px 24px;
+    line-height: 1.6;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c4a57b, #e8d5b7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    color: #888;
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+  }
+
+  /* Toggle */
+  .toggle-container {
+    display: flex;
+    gap: 4px;
+    background: #1a1a22;
+    border-radius: 12px;
+    padding: 4px;
+    width: fit-content;
+    margin-bottom: 28px;
+    border: 1px solid #2a2a35;
+  }
+
+  .toggle-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: transparent;
+    color: #777;
+  }
+
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #c4a57b, #a8865a);
+    color: #0f0f12;
+    box-shadow: 0 2px 12px rgba(196,165,123,0.25);
+  }
+
+  .toggle-btn:hover:not(.active) { color: #bbb; }
+
+  /* Table wrapper */
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #2a2a35;
+    background: #15151d;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+  }
+
+  /* Header row */
+  thead th {
+    padding: 18px 16px;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: #1a1a24;
+    border-bottom: 2px solid #2a2a35;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  thead th:first-child {
+    color: #888;
+    min-width: 160px;
+    background: #1a1a24;
+    position: sticky;
+    left: 0;
+    z-index: 3;
+  }
+
+  /* Product header colors */
+  .col-app { color: #7eb8f0; }
+  .col-artefactos { color: #a78bfa; }
+  .col-skills { color: #6ee7b7; }
+  .col-code { color: #fbbf24; }
+  .col-cowork { color: #f87171; }
+  .col-mcp { color: #fb923c; }
+
+  /* Body */
+  tbody td {
+    padding: 14px 16px;
+    font-size: 0.84rem;
+    border-bottom: 1px solid #1e1e28;
+    vertical-align: top;
+  }
+
+  tbody tr:hover td { background: rgba(196,165,123,0.04); }
+
+  tbody td:first-child {
+    font-weight: 600;
+    color: #c4a57b;
+    background: #15151d;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 160px;
+  }
+
+  tbody tr:hover td:first-child { background: #191920; }
+
+  /* Category separator */
+  .category-row td {
+    background: #1c1c27 !important;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #888;
+    padding: 10px 16px;
+    border-bottom: 1px solid #2a2a35;
+  }
+
+  /* Emoji/Icon badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .badge-yes { background: rgba(110,231,183,0.15); color: #6ee7b7; }
+  .badge-no { background: rgba(248,113,113,0.12); color: #f87171; }
+  .badge-partial { background: rgba(251,191,36,0.15); color: #fbbf24; }
+
+  /* Tech detail toggle */
+  .tech-detail {
+    display: none;
+    margin-top: 6px;
+    padding: 8px 10px;
+    background: rgba(196,165,123,0.06);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #aaa;
+    border-left: 2px solid #c4a57b33;
+  }
+
+  body.show-tech .tech-detail { display: block; }
+
+  /* Icons row */
+  .product-icon {
+    display: block;
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 28px;
+    padding: 20px 24px;
+    background: #15151d;
+    border-radius: 12px;
+    border: 1px solid #2a2a35;
+  }
+
+  .footer h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #c4a57b;
+    margin-bottom: 10px;
+  }
+
+  .footer p {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 6px;
+  }
+
+  .footer strong { color: #bbb; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #888;
+  }
+
+  /* Analogy section */
+  .analogy-section {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #1a1a24, #1e1c28);
+    border-radius: 12px;
+    border: 1px solid #2a2a35;
+  }
+
+  .analogy-section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #a78bfa;
+    margin-bottom: 14px;
+  }
+
+  .analogy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+
+  .analogy-card {
+    padding: 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border: 1px solid #2a2a35;
+  }
+
+  .analogy-card .icon { font-size: 1.5rem; margin-bottom: 6px; }
+  .analogy-card .name { font-weight: 700; font-size: 0.82rem; margin-bottom: 4px; }
+  .analogy-card .desc { font-size: 0.78rem; color: #888; }
+
+  @media (max-width: 768px) {
+    h1 { font-size: 1.4rem; }
+    body { padding: 16px 12px; }
+    .analogy-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Ecosistema Claude — Cuadro Comparativo</h1>
+  <p class="subtitle">Claude App · Artefactos · Skills · Claude Code · Cowork · MCP — Febrero 2026</p>
+
+  <div class="toggle-container">
+    <button class="toggle-btn active" onclick="toggleView('simple')">👤 Usuario Común</button>
+    <button class="toggle-btn" onclick="toggleView('tech')">💻 Programador</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="col-app"><span class="product-icon">💬</span>Claude App</th>
+          <th class="col-artefactos"><span class="product-icon">🎨</span>Artefactos</th>
+          <th class="col-skills"><span class="product-icon">🧩</span>Skills</th>
+          <th class="col-code"><span class="product-icon">⌨️</span>Claude Code</th>
+          <th class="col-cowork"><span class="product-icon">🤝</span>Cowork</th>
+          <th class="col-mcp"><span class="product-icon">🔌</span>MCP</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- IDENTIDAD -->
+        <tr class="category-row"><td colspan="7">📋 Identidad</td></tr>
+
+        <tr>
+          <td>¿Qué es?</td>
+          <td>La interfaz principal para hablar con Claude (web, escritorio, móvil)
+            <div class="tech-detail">Interfaz conversacional con sandbox Linux (Ubuntu 24) para ejecución de código aislada. Filesystem se reinicia entre sesiones.</div>
+          </td>
+          <td>Contenido que se muestra en un panel separado al lado del chat (páginas, apps, diagramas)
+            <div class="tech-detail">Archivos renderizados en el cliente según extensión (.html, .jsx, .md, .mermaid, .svg, .pdf). Entorno React restringido con librerías predefinidas.</div>
+          </td>
+          <td>Paquetes de instrucciones que hacen a Claude mejor en tareas específicas
+            <div class="tech-detail">Directorios con SKILL.md (YAML frontmatter + markdown), scripts opcionales, templates y recursos. Carga lazy bajo demanda. Estándar abierto Agent Skills.</div>
+          </td>
+          <td>Herramienta de línea de comandos para desarrolladores que trabaja directamente en tu proyecto
+            <div class="tech-detail">CLI agéntico vía npm (@anthropic-ai/claude-code). Requiere Node.js. Acceso directo al filesystem local, shell, git, y toolchain completo.</div>
+          </td>
+          <td>Versión de Claude Code para no-programadores, dentro de la app de escritorio
+            <div class="tech-detail">Arquitectura agéntica idéntica a Claude Code (Claude Agent SDK) con ejecución en VM containerizada. Monta carpetas del usuario en el sandbox. Soporta sub-agentes paralelos.</div>
+          </td>
+          <td>Protocolo estándar abierto que conecta a Claude con apps y datos externos
+            <div class="tech-detail">Protocolo sobre JSON-RPC 2.0, inspirado en LSP. Arquitectura Host → Client → Server. Primitivas: Tools, Resources, Prompts. Donado a la Linux Foundation (AAIF) en dic. 2025.</div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Analogía</td>
+          <td>Sala de reuniones con tu asistente</td>
+          <td>La pizarra interactiva al lado de la conversación</td>
+          <td>Los manuales de especialización del asistente</td>
+          <td>Un ingeniero trabajando en la fábrica</td>
+          <td>El mismo ingeniero, pero en una oficina cómoda</td>
+          <td>Las carreteras que conectan la oficina con el mundo</td>
+        </tr>
+
+        <!-- ACCESO -->
+        <tr class="category-row"><td colspan="7">🚪 Acceso y Requisitos</td></tr>
+
+        <tr>
+          <td>Interfaz</td>
+          <td>Web (claude.ai), app escritorio, app móvil</td>
+          <td>Panel derecho dentro de Claude App</td>
+          <td>Se activan en Ajustes; Claude las detecta automáticamente</td>
+          <td>Terminal / línea de comandos</td>
+          <td>Pestaña "Cowork" en la app de escritorio (macOS y Windows)</td>
+          <td>Invisible al usuario; funciona "por debajo" como Conectores en Ajustes</td>
+        </tr>
+
+        <tr>
+          <td>Plan requerido</td>
+          <td>Free ✓ (con límites)</td>
+          <td>Free ✓</td>
+          <td>Free ✓ (desde feb. 2026)</td>
+          <td>Pro, Max, Team, Enterprise (o API con pago por uso)</td>
+          <td>Pro, Max, Team, Enterprise</td>
+          <td>Free ✓ (conectores básicos)</td>
+        </tr>
+
+        <tr>
+          <td>Conocimiento técnico</td>
+          <td><span class="badge badge-yes">Ninguno</span></td>
+          <td><span class="badge badge-yes">Ninguno</span></td>
+          <td><span class="badge badge-yes">Ninguno</span> para usar · <span class="badge badge-partial">Bajo-Medio</span> para crear</td>
+          <td><span class="badge badge-no">Alto</span> Terminal + programación</td>
+          <td><span class="badge badge-yes">Ninguno</span></td>
+          <td><span class="badge badge-yes">Ninguno</span> como usuario · <span class="badge badge-no">Alto</span> para crear servidores</td>
+        </tr>
+
+        <tr>
+          <td>Requisitos técnicos</td>
+          <td>Navegador o app instalada</td>
+          <td>Ninguno (parte de la App)</td>
+          <td>Activar en Ajustes > Capacidades
+            <div class="tech-detail">Requiere Code Execution tool habilitado. Vía API: betas code-execution-2025-08-25, files-api-2025-04-14, skills-2025-10-02.</div>
+          </td>
+          <td>Node.js + npm install
+            <div class="tech-detail">npm install -g @anthropic-ai/claude-code. Requiere Node.js 18+. Funciona en macOS, Linux, Windows (WSL).</div>
+          </td>
+          <td>App de escritorio + cuenta de pago</td>
+          <td>Activar Conectores en Ajustes
+            <div class="tech-detail">Para crear servidores: SDKs disponibles en Python, TypeScript, Java, Kotlin, C#, Go, Ruby, Swift.</div>
+          </td>
+        </tr>
+
+        <!-- CAPACIDADES -->
+        <tr class="category-row"><td colspan="7">⚡ Capacidades</td></tr>
+
+        <tr>
+          <td>Acceso a archivos</td>
+          <td>Solo los que subes al chat</td>
+          <td>No accede a archivos; genera contenido visual</td>
+          <td>Archivos dentro del paquete de la Skill
+            <div class="tech-detail">Scripts, templates, y recursos empaquetados en el directorio de la skill. No accede al filesystem del usuario directamente.</div>
+          </td>
+          <td><span class="badge badge-yes">Total</span> Lee y escribe en tu proyecto completo</td>
+          <td><span class="badge badge-partial">Carpeta designada</span> Solo las carpetas que autorizas
+            <div class="tech-detail">Monta carpetas autorizadas en una VM containerizada. Requiere permiso explícito para eliminación de archivos.</div>
+          </td>
+          <td>Accede a datos de servicios externos (Drive, Slack, etc.)</td>
+        </tr>
+
+        <tr>
+          <td>Ejecuta código</td>
+          <td><span class="badge badge-yes">Sí</span> En sandbox aislado
+            <div class="tech-detail">Ubuntu 24, Python, Bash, Node.js. Filesystem se reinicia entre tareas. Sin acceso a red (configurable).</div>
+          </td>
+          <td><span class="badge badge-partial">Limitado</span> Solo React/HTML/JS en el navegador
+            <div class="tech-detail">Runtime React restringido. Sin localStorage/sessionStorage. Librerías predefinidas (Recharts, D3, Three.js, shadcn/ui, etc.). API de persistencia propia (window.storage).</div>
+          </td>
+          <td><span class="badge badge-yes">Sí</span> Scripts incluidos en la Skill
+            <div class="tech-detail">Python/JS ejecutados en el mismo sandbox. Diseñado para tareas deterministas donde código &gt; generación por tokens.</div>
+          </td>
+          <td><span class="badge badge-yes">Total</span> Cualquier comando en tu máquina</td>
+          <td><span class="badge badge-yes">Sí</span> En VM aislada
+            <div class="tech-detail">Ejecución containerizada. Puede usar Python, scripts, herramientas CLI. Sub-agentes trabajan en paralelo.</div>
+          </td>
+          <td><span class="badge badge-no">No</span> Es un protocolo, no ejecuta código
+            <div class="tech-detail">Define interfaces para invocación de herramientas. La ejecución la hace el servidor MCP, no el protocolo en sí.</div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Crea archivos descargables</td>
+          <td><span class="badge badge-yes">Sí</span> .docx, .xlsx, .pptx, .pdf, etc.</td>
+          <td><span class="badge badge-partial">Solo visuales</span> .html, .jsx, .md, .svg (se ven, no se "descargan" como docs)</td>
+          <td><span class="badge badge-yes">Sí</span> Potencian la creación de docs profesionales</td>
+          <td><span class="badge badge-yes">Sí</span> Cualquier tipo de archivo</td>
+          <td><span class="badge badge-yes">Sí</span> Directamente en tu carpeta local</td>
+          <td><span class="badge badge-no">No</span> Conecta datos, no crea archivos</td>
+        </tr>
+
+        <tr>
+          <td>Conexión a apps externas</td>
+          <td><span class="badge badge-partial">Vía Conectores</span> (Drive, Slack, Notion, etc.)</td>
+          <td><span class="badge badge-partial">Limitado</span> Puede llamar a la API de Anthropic internamente</td>
+          <td><span class="badge badge-partial">Pueden orquestar</span> llamadas a servicios vía MCP</td>
+          <td><span class="badge badge-yes">Total</span> MCP nativo + cualquier CLI/API
+            <div class="tech-detail">Servidores MCP en .claude/settings.json. Hooks pre/post ejecución. Integración con gh, gcloud, aws, etc.</div>
+          </td>
+          <td><span class="badge badge-yes">Sí</span> Conectores + plugins + MCP</td>
+          <td><span class="badge badge-yes">Es su propósito principal</span></td>
+        </tr>
+
+        <tr>
+          <td>Autonomía</td>
+          <td><span class="badge badge-partial">Baja</span> Responde paso a paso al chat</td>
+          <td><span class="badge badge-partial">Baja</span> Genera contenido por pedido</td>
+          <td><span class="badge badge-partial">Media</span> Claude las detecta y usa automáticamente</td>
+          <td><span class="badge badge-yes">Alta</span> Planifica y ejecuta cadenas de acciones</td>
+          <td><span class="badge badge-yes">Alta</span> Planifica, ejecuta y coordina sub-tareas en paralelo</td>
+          <td>N/A (infraestructura, no agente)</td>
+        </tr>
+
+        <!-- PERSISTENCIA -->
+        <tr class="category-row"><td colspan="7">💾 Persistencia y Contexto</td></tr>
+
+        <tr>
+          <td>Memoria entre sesiones</td>
+          <td><span class="badge badge-partial">Opcional</span> (función de Memoria en Ajustes)</td>
+          <td><span class="badge badge-partial">Sí</span> via window.storage API
+            <div class="tech-detail">Key-value store: personal (shared: false) o compartido (shared: true). Máx 5MB/key. Sin localStorage/sessionStorage.</div>
+          </td>
+          <td><span class="badge badge-yes">Las instrucciones persisten</span> (los datos no)</td>
+          <td><span class="badge badge-yes">CLAUDE.md</span> + archivos del proyecto
+            <div class="tech-detail">CLAUDE.md como memoria persistente. .claude/settings.json para config. Todo en archivos locales, portable entre herramientas.</div>
+          </td>
+          <td><span class="badge badge-no">No</span> Sin memoria entre sesiones</td>
+          <td>N/A (el servidor mantiene su propio estado)</td>
+        </tr>
+
+        <tr>
+          <td>Contexto del proyecto</td>
+          <td>Solo lo que está en la conversación actual</td>
+          <td>Solo los datos del artefacto actual</td>
+          <td>Instrucciones de la Skill + archivos del paquete</td>
+          <td><span class="badge badge-yes">Proyecto completo</span> Entiende toda la estructura
+            <div class="tech-detail">Lee el filesystem completo, entiende dependencias, relaciones entre archivos, convenciones del codebase.</div>
+          </td>
+          <td>Archivos en las carpetas autorizadas</td>
+          <td>Datos de los servicios conectados</td>
+        </tr>
+
+        <!-- USO IDEAL -->
+        <tr class="category-row"><td colspan="7">🎯 Cuándo Usar Cada Uno</td></tr>
+
+        <tr>
+          <td>Ideal para</td>
+          <td>Preguntas, conversación, tareas puntuales, generar documentos, analizar archivos</td>
+          <td>Prototipos visuales, dashboards interactivos, diagramas, componentes React, contenido para ver en el momento</td>
+          <td>Especializar a Claude en tu dominio: guías de marca, formatos de reportes, workflows repetibles</td>
+          <td>Desarrollo de software: escribir código, debugging, refactoring, testing, deploys, automatización</td>
+          <td>Tareas complejas no-técnicas: organizar archivos, investigación, crear documentos, procesar datos</td>
+          <td>Conectar Claude con tus herramientas: Drive, Slack, GitHub, bases de datos, APIs</td>
+        </tr>
+
+        <tr>
+          <td>NO es ideal para</td>
+          <td>Tareas que requieren acceso a tu filesystem o ejecución prolongada autónoma</td>
+          <td>Documentos profesionales para descargar (.docx, .xlsx), acceso a datos externos</td>
+          <td>Tareas que necesitan datos en tiempo real o acceso a sistemas externos (para eso, combinar con MCP)</td>
+          <td>Usuarios sin experiencia en terminal o tareas que no involucran código/archivos</td>
+          <td>Código y desarrollo de software (usar Claude Code); tareas simples de chat (usar Claude App)</td>
+          <td>Ejecutar lógica, crear archivos o funcionar por sí solo sin un host (necesita Claude App, Code o Cowork)</td>
+        </tr>
+
+        <!-- RELACIÓN -->
+        <tr class="category-row"><td colspan="7">🔗 Cómo se Relacionan</td></tr>
+
+        <tr>
+          <td>Relación con los demás</td>
+          <td>Es el <strong>punto de entrada</strong> principal. Usa Artefactos para mostrar contenido, Skills para tareas especializadas, y MCP (Conectores) para datos externos</td>
+          <td>Se generan <strong>dentro</strong> de la Claude App. Son la capa de visualización interactiva</td>
+          <td>Funcionan <strong>dentro</strong> de Claude App, Claude Code, Cowork y la API. Son el sistema de extensibilidad transversal</td>
+          <td><strong>Independiente</strong> de la App. Usa Skills locales (.claude/skills/) y servidores MCP. No genera Artefactos</td>
+          <td><strong>Versión accesible</strong> de Claude Code. Usa Skills, Conectores (MCP) y plugins. Integrable con Claude in Chrome</td>
+          <td>Es la <strong>capa de infraestructura</strong> que todos los demás productos pueden usar para conectarse al exterior</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Analogía visual -->
+  <div class="analogy-section">
+    <h3>🏢 Analogía: Si Claude fuera una empresa...</h3>
+    <div class="analogy-grid">
+      <div class="analogy-card">
+        <div class="icon">💬</div>
+        <div class="name" style="color:#7eb8f0">Claude App</div>
+        <div class="desc">La recepción — donde hablas con el asistente cara a cara</div>
+      </div>
+      <div class="analogy-card">
+        <div class="icon">🎨</div>
+        <div class="name" style="color:#a78bfa">Artefactos</div>
+        <div class="desc">La pizarra de la sala de reuniones — donde ves los borradores en vivo</div>
+      </div>
+      <div class="analogy-card">
+        <div class="icon">🧩</div>
+        <div class="name" style="color:#6ee7b7">Skills</div>
+        <div class="desc">Los manuales de capacitación — lo que hace al empleado más experto</div>
+      </div>
+      <div class="analogy-card">
+        <div class="icon">⌨️</div>
+        <div class="name" style="color:#fbbf24">Claude Code</div>
+        <div class="desc">El taller de ingeniería — acceso total a la maquinaria</div>
+      </div>
+      <div class="analogy-card">
+        <div class="icon">🤝</div>
+        <div class="name" style="color:#f87171">Cowork</div>
+        <div class="desc">La oficina ejecutiva — la potencia del taller, pero cómoda y accesible</div>
+      </div>
+      <div class="analogy-card">
+        <div class="icon">🔌</div>
+        <div class="name" style="color:#fb923c">MCP</div>
+        <div class="desc">Las carreteras y el sistema postal — cómo llega información del exterior</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <h3>📌 Leyenda</h3>
+    <div class="legend">
+      <div class="legend-item"><span class="badge badge-yes">✓</span> Sí / Disponible</div>
+      <div class="legend-item"><span class="badge badge-partial">~</span> Parcial / Con limitaciones</div>
+      <div class="legend-item"><span class="badge badge-no">✗</span> No / Requiere nivel alto</div>
+    </div>
+    <p style="margin-top: 14px;"><strong>Nota:</strong> Al cambiar a la vista "Programador", se revelan detalles técnicos adicionales en las celdas marcadas.</p>
+    <p style="margin-top: 6px; font-size: 0.75rem; color: #666;">Información actualizada a febrero 2026. Las funcionalidades y precios pueden cambiar. Consulta <a href="https://claude.ai" style="color:#c4a57b">claude.ai</a> y <a href="https://docs.claude.com" style="color:#c4a57b">docs.claude.com</a> para la información más reciente.</p>
+  </div>
+
+</div>
+
+<script>
+  function toggleView(mode) {
+    const btns = document.querySelectorAll('.toggle-btn');
+    btns.forEach(b => b.classList.remove('active'));
+
+    if (mode === 'tech') {
+      document.body.classList.add('show-tech');
+      btns[1].classList.add('active');
+    } else {
+      document.body.classList.remove('show-tech');
+      btns[0].classList.add('active');
+    }
+  }
+</script>
+</body>
+</html>
